@@ -12,10 +12,13 @@ if echo "$content" | grep -qi "$SEARCH_TERM"; then
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     echo "[$timestamp] FOUND: iPhone 13 mini available!" >> "$LOG_FILE"
 
-    # macOS notification
-    osascript -e 'display notification "iPhone 13 mini is now available on Apple Refurbished!" with title "iPhone Alert" sound name "Glass"'
+    # macOS dialog box (more reliable than notification center)
+    response=$(osascript <<'APPLESCRIPT'
+display dialog "iPhone 13 mini is now available on Apple Refurbished!" with title "iPhone Alert" buttons {"Open Page", "OK"} default button "Open Page"
+APPLESCRIPT
+)
 
-    # Also open the page in browser
+    # Open page if user clicked "Open Page" or automatically
     open "$URL"
 
     echo "FOUND: iPhone 13 mini is available!"
